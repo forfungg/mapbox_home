@@ -1,0 +1,42 @@
+body {
+	background-color: black;
+	margin: 0;
+    padding: 0;
+}
+
+.std_pop .mapboxgl-popup-content {
+	background-color: #b880b4b9;
+	text-align: center;
+}
+
+.std_pop .mapboxgl-popup-tip {
+	border-top-color: #b880b4b9;
+}
+
+.header_bar {
+	height: 100px;
+	width: auto;
+	margin: 0;
+}
+
+.header_bar .img {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100px;
+	width: auto;
+}
+
+#logoContainer {
+	position: absolute;
+	z-index: 100;
+	top: 0;
+	left: 10px;
+	background-color: transparent;
+	width: 200px;
+	height: 100px;
+  }
+
+  #logoContainer img {
+	  width: 100%;
+  }

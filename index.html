@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>MapBox Home Assignment by Jiri Novotny</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
+	<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' />
+	<link href='mapbox_styles.css' type='text/css' rel='stylesheet'>
+	<link rel="icon" href="images/icons/jiricodes-icon.ico">
+    <style>
+      #map {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+		height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+	<div id='map'>
+		<div id="logoContainer">
+			<img src="images/jiricodes.png"></img>
+		</div>
+	</div>
+    <script>
+    mapboxgl.accessToken = 'pk.eyJ1Ijoiam5vdm90bnkiLCJhIjoiY2s3Y3dyemJiMHVjZzNtcndqdm9sYmt4ZiJ9.rP_aovQgLn-MOK5wRDdGlw';
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/jnovotny/ck7je3nju6w7b1imo3e8klzdc',
+      center: [24.9375, 40.170833],
+      zoom: 1.85
+    });
+
+	map.addControl(new mapboxgl.FullscreenControl());
+
+	var srcs = null
+
+	map.on('load', function() {
+		map.setPaintProperty(
+					'hki-lines',
+					'line-color',
+					[
+						'case',
+						['boolean', ['feature-state', 'hover'], false],
+						'#ffffff',
+						[
+							"interpolate",
+							["linear"],
+							["get", "distance"],
+							82033.39613207453,
+							"#f9f4a9",
+							17097011.893488917,
+							"#801479"
+						]
+					]
+				);
+		console.log(map.style.sourceCaches);
+		console.log(map.getSource('composite'));
+		});
+	
+    map.on('click', function(e) {
+		var click_box = [
+			[e.point.x - 2, e.point.y - 2],
+			[e.point.x + 2, e.point.y + 2]
+		]
+	var features = map.queryRenderedFeatures(click_box, {
+		layers: ['hki-lines']
+	});
+
+	if (!features.length) {
+		return;
+	}
+
+	var feature = features[0];
+
+	if (feature.properties.website != null) {
+		var web = '<p><a href="' + feature.properties.website +'" target="_blank">' + feature.properties.formatted_address +'</a></p>'
+	}
+	else {
+		var web = ''
+	}
+
+	var popup = new mapboxgl.Popup({ offset: [0, -15] , className: "std_pop", anchor: 'bottom'})
+		.setLngLat(e.lngLat)
+		.setHTML('<h3>' + feature.properties.origin + ' - ' + feature.properties.destination + '</h3><p>' + (feature.properties.distance/1000).toFixed(0) + ' km' + '</p>' + web)
+		.addTo(map);
+	});
+
+	var hoveredLineId = null;
+
+	map.on('mousemove', 'hki-lines', function(e) {
+		if (e.features.length > 0) {
+			map.getCanvas().style.cursor = 'pointer';
+			if (hoveredLineId) {
+				map.setFeatureState(
+					{ source: 'composite', sourceLayer: 'hki-lines', id: hoveredLineId },
+					{ hover: false }
+				);
+			}
+			hoveredLineId = e.features[0].id;
+			map.setFeatureState(
+				{ source: 'composite', sourceLayer: 'hki-lines', id: hoveredLineId },
+				{ hover: true }
+			);
+			}
+	});
+
+	map.on('mouseleave', 'hki-lines', function() {
+		map.getCanvas().style.cursor = '';
+		if (hoveredLineId) {
+			map.setFeatureState(
+			{ source: 'composite', sourceLayer: 'hki-lines',id: hoveredLineId },
+			{ hover: false }
+			);
+		}
+		hoveredLineId = null;
+	});
+    </script>
+  </body>
+</html>
