@@ -1,12 +1,11 @@
 # MapBox Home Assignment 2020
 
-The result version 1.0 can be found [here](https://jiricodes.com/mapbox)
 
 ## Usage
 
 ### Interactive map
 
-Open index.html in your browser. Or visit [https://jiricodes.com/mapbox](https://jiricodes.com/mapbox).
+Open index.html in your browser.
 
 ### GeoJSON generator
 
